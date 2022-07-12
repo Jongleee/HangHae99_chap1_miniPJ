@@ -1,4 +1,7 @@
 /* 내비게이션 바 */
+* {
+  font-family: 'Dongle', sans-serif;
+}
 .nav-container {
   width: 100%;
   margin: 0 auto;
@@ -23,6 +26,7 @@ nav .nav-container {
 }
 .logoutBtn {
   margin-right: 10px;
+  font-size: 25px;
 }
 .logoutBtn > button {
   border: none;
@@ -51,6 +55,7 @@ nav .nav-container {
   line-height: 20px;
   color: #333;
   font-weight: 600;
+  font-size: 40px;
 }
 .logo-span:hover {
   color: tomato;
