@@ -11,12 +11,11 @@
 - 남궁은
 - 안승현
 - 이길종
-- 이연우
 
 ### 🛠️ 사용 기술
 
 - HTML5, CSS3, JavaScript
-- Python, flask
+- Python (flask, jinja2)
 - AWS
 - MongoDB Atlas
 - Bootstrap
