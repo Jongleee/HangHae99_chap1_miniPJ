@@ -1,0 +1,129 @@
+* {
+  background-color: lightseagreen;
+  font-family: 'Dongle', sans-serif;
+}
+
+html {
+  height: 100%;
+}
+
+body {
+  height: 100%;
+}
+
+.background {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.wrap {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.titlebox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  margin: 2% 0 2% 0;
+  color: white;
+}
+
+.picture {
+  width: 70px;
+  heigth: 70px;
+  margin-bottom: 10px;
+}
+
+.titlebox > h1 {
+  font-size: 60px;
+  margin-bottom: 0;
+  font-family: 'Dongle', sans-serif;
+  margin-bottom: 10px;
+}
+
+.titlebox > .cup {
+  margin-right: 10px;
+}
+.myreg {
+  width: 80%;
+  height: 80%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.registerbox {
+  width: 80%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.btns {
+  margin: 1% 0 0 0;
+  display: flex;
+  justify-content: center;
+  width: 80%;
+}
+
+.registerbtn,
+id_check {
+  background-color: white;
+  color: black;
+  border: 1px outset white;
+  border-radius: 10px;
+  font-family: 'Dongle', sans-serif;
+  margin-right: 1%;
+  padding: 1%;
+}
+.register_cancle {
+  background-color: white;
+  color: black;
+  border: 1px outset white;
+  border-radius: 10px;
+  font-family: 'Dongle', sans-serif;
+  margin-right: 1%;
+  padding: 1%;
+}
+
+.col-auto > button {
+  background-color: rebeccapurple;
+  border-radius: 10px;
+  margin: 10px 0px 0px 10px;
+}
+.id_check {
+  background-color: white;
+  border: 1px outset green;
+  color: black;
+  border-radius: 10px;
+  font-family: 'Dongle', sans-serif;
+}
+
+@media screen and (max-width: 700px) {
+  .titlebox {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin: 2% 0 2% 0;
+    color: white;
+    width: 100%;
+  }
+
+  .titlebox > h1 {
+    font-size: 50px;
+    margin-bottom: 0;
+    font-family: 'Dongle', sans-serif;
+  }
+}
