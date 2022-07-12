@@ -23,3 +23,10 @@
   width: 900px;
   margin: 20px auto 20px auto;
 }
+.card-body > a {
+  text-decoration: none;
+  color: #333;
+}
+.card-body > a:hover {
+  color: tomato;
+}
