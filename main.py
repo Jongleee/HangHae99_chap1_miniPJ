@@ -1,7 +1,10 @@
 from flask import Flask, render_template, request, jsonify, redirect, url_for
-from pymongo import MongoClient
 
 app = Flask(__name__)
+
+from pymongo import MongoClient
+client = MongoClient('mongodb+srv://test:sparta@cluster0.rv5esal.mongodb.net/Cluster0?retryWrites=true&w=majority')
+db = client.dbsparta
 
 import requests
 from bs4 import BeautifulSoup
@@ -10,7 +13,36 @@ from bs4 import BeautifulSoup
 def main():
 	return render_template('main.html')
 
-@app.route('/api/main', methods=['GET'])
+#db 저장
+@app.route('/api/main_dbpost', methods=['POST'])
+def save_diary():
+
+	url = "https://search.naver.com/search.naver?where=nexearch&sm=top_hty&fbm=1&ie=utf8&query=%EA%B0%95%EB%82%A8%EA%B5%AC+%ED%97%AC%EC%8A%A4%EC%9E%A5"
+	headers = {
+		'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36'}
+	data = requests.get(url, headers=headers)
+
+	req = data.text
+	soup = BeautifulSoup(req, 'html.parser')
+
+	gyms = soup.select('#loc-main-section-root > section > div > ul')
+	count = 0
+	for gym in gyms:
+		gymTitle = gym.select('div._3ZU00._1rBq3 > a:nth-child(1) > div._2w9xx > div > span.place_bluelink._3Apve')
+		gymAdd = gym.select('div._3ZU00._1rBq3 > div._1B9G6 > div > span > a > span._2Po-x')
+		for t in gymTitle:
+			for a in gymAdd:
+				print(t.text.strip(), a.text.strip())
+				tt = t.text.strip()
+				aa = a.text.strip()
+				count += 1
+				db.health.insert_one(
+					{'title': tt, 'add': aa,'num':count})
+				break
+
+
+#db 불러오기
+@app.route('/api/main_dbget', methods=['GET'])
 def show_diary():
 	sample_receive = request.args.get('sample_give')
 	print(sample_receive)
@@ -26,16 +58,21 @@ soup = BeautifulSoup(req, 'html.parser')
 
 gyms = soup.select('#loc-main-section-root > section > div > ul')
 
+
 for gym in gyms:
 	gymTitle = gym.select('div._3ZU00._1rBq3 > a:nth-child(1) > div._2w9xx > div > span.place_bluelink._3Apve')
 	gymAdd = gym.select('div._3ZU00._1rBq3 > div._1B9G6 > div > span > a > span._2Po-x')
+	for t in gymTitle:
+		for a in gymAdd:
+			print(t.text.strip(),a.text.strip())
+			break
 
-	for gymT in gymTitle:
-		gym_title = gymT.text
-		print(gym_title)
-	for gymA in gymAdd:
-		gym_address = gymA.text
-		print(gym_address)
+# for gymT in gymTitle:
+	# 	gym_title = gymT.text
+	# 	print(gym_title)
+	# for gymA in gymAdd:
+	# 	gym_address = gymA.text
+	# 	print(gym_address)
 
 @app.route('/')
 def home():
