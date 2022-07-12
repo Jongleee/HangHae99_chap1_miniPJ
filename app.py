@@ -1,8 +1,9 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, redirect, url_for
+
 app = Flask(__name__)
 
 from pymongo import MongoClient
-client = MongoClient('mongodb+srv://test:sparta@cluster0.ovlot.mongodb.net/Cluster0?retryWrites=true&w=majority')
+client = MongoClient('mongodb+srv://test:sparta@cluster0.rv5esal.mongodb.net/Cluster0?retryWrites=true&w=majority')
 db = client.dbsparta
 
 # JWT 토큰을 만들 때 필요한 비밀문자열입니다. 아무거나 입력해도 괜찮습니다.
@@ -11,18 +12,43 @@ SECRET_KEY = 'SPARTA'
 
 import jwt, datetime, hashlib
 
-@app.route('/login')
+@app.route('/')
 def home():
+
+
+    return render_template('login.html')
+
+@app.route('/login')
+def login():
     return render_template('login.html')
 
 @app.route('/register')
 def register():
     return render_template('register.html')
 
+@app.route('/main_sh')
+def main():
+    token_receive = request.cookies.get('mytoken')
 
-#################################
-##  로그인을 위한 API            ##
-#################################
+    return render_template('main_sh.html')
+
+@app.route('/main_sh', methods=['GET'])
+def main_get_nick():
+    token_receive = request.cookies.get('mytoken')
+    
+
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        user_info = db.users.find_one({"id": payload['id']})
+        return jsonify({'result': 'success', 'nickname': user_info['nick']})
+    except jwt.exceptions.DecodeError:
+        return redirect(url_for("login", msg="로그인 정보가 존재하지 않습니다."))
+    except jwt.ExpiredSignatureError:
+        return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
+
+
+
+
 
 
 # [회원가입 API]
@@ -38,27 +64,121 @@ def api_register():
 
     print(id_receive,pw_receive,pw_check_receive,gender_receive,nick_receive)
 
-    db.users.insert_one({'id': id_receive, 'pw': pw_receive, 'pw_check': pw_check_receive,
-                         'gender': gender_receive, 'nick': nick_receive})
-    return jsonify({'result': 'success', 'msg': '회원가입을 완료했습니다.'})
+    if id_receive == '':
+        return jsonify({'result': 'empty', 'msg': '아이디를 입력해주세요.'})
+    elif pw_receive == '':
+        return jsonify({'result': 'empty', 'msg': '비밀번호를 입력해주세요.'})
+    elif pw_check_receive == '':
+        return jsonify({'result': 'empty','msg':'비밀번호를 입력해주세요'})
+    elif gender_receive == '':
+        return jsonify({'result': 'empty','msg':'성별을 선택해주세요'})
+    elif nick_receive == '':
+        return jsonify({'result': 'empty','msg':'닉네임을 입력해주세요'})
+    else:
+        if pw_receive != pw_check_receive:
+            return jsonify({'result': 'empty','msg':'비밀번호가 서로 다릅니다.'})
+        else:
+            pw_hash = hashlib.sha256(pw_receive.encode('utf-8')).hexdigest()
 
-@app.route("/gyms", methods=["POST"])
-def web_mars_post():
+            id_result = db.users.find_one({'id':id_receive})
+            nick_result = db.users.find_one({'id':nick_receive})
+
+            if id_result is not None:
+                return jsonify({'result': 'fail', 'msg': '중복된 아이디가 있습니다.'})
+            elif nick_result is not  None:
+                return jsonify({'result': 'fail', 'msg': '중복된 닉네임이 있습니다.'})
+            else:
+                db.users.insert_one(
+                    {'id': id_receive, 'pw': pw_hash, 'nick': nick_receive,'gender': gender_receive})
+                return jsonify({'result': 'success', 'msg': '회원가입을 완료했습니다.'})
+
+# [로그인 API]
+# id, pw를 받아서 맞춰보고, 토큰을 만들어 발급합니다.
+@app.route('/api/login', methods=['POST'])
+def api_login():
     id_receive = request.form['id_give']
+    pw_receive = request.form['pw_give']
+
+    # 회원가입 때와 같은 방법으로 pw를 암호화합니다.
+    pw_hash = hashlib.sha256(pw_receive.encode('utf-8')).hexdigest()
+
+    # id, 암호화된pw을 가지고 해당 유저를 찾습니다.
+    result = db.users.find_one({'id':id_receive,'pw':pw_hash})
+    
+    if id_receive == '':
+        return jsonify({'result': 'fail_id', 'msg': '아이디를 입력해주세요'})
+    elif pw_receive == '':
+        return jsonify({'result': 'fail_pw', 'msg': '비밀번호를 입력해주세요'})
+    elif result is not None:
+        payload = {
+            'id': id_receive,
+            'exp': datetime.datetime.utcnow() + datetime.timedelta(seconds=60*60*24)
+        }
+        token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
+
+        return jsonify({'result': 'success', 'token': token})
+    else:
+        return jsonify({'result': 'fail', 'msg': '아이디와 비밀번호를 확인해주세요'})
+    
+
+# [ID_Check]
+# id, pw를 받아서 맞춰보고, 토큰을 만들어 발급합니다.
+@app.route('/api/register/id_check', methods=['POST'])
+def register_id_check():
+    checkid_receive = request.form['id_give']
+
+    result_id = db.users.find_one({'id': checkid_receive})
+
+    if checkid_receive == '':
+        return jsonify({'result': 'empty', 'msg': '아이디를 입력해주세요.'})
+    elif result_id is not None:
+        return jsonify({'result':'fail','msg':'중복된 아이디가 있습니다.'})
+    else:
+        return jsonify({'id': checkid_receive, 'result': 'success', 'msg': '사용 가능한 아이디입니다.'})
+
+@app.route('/api/register/nick_check', methods=['POST'])
+def register_nick_check():
+    checknick_receive = request.form['nick_give']
+
+    result_id = db.users.find_one({'id': checknick_receive})
+
+    if checknick_receive == '':
+        return jsonify({'result': 'empty', 'msg': '닉네임을 입력해주세요.'})
+    elif result_id is not None:
+        return jsonify({'result':'fail','msg':'중복된 닉네임이 있습니다.'})
+    else:
+        return jsonify({'id': checknick_receive, 'result': 'success', 'msg': '사용 가능한 닉네임입니다.'})
 
 
+
+
+@app.route('/detail/<keyword>')
+def detail(keyword):
+    return render_template("reply.html", gym=keyword,nickname='nick')
+
+# 회원별 운동 시설 평가 기능: 평가, 회원의 닉네임 가져오기
+@app.route('/detail/<keyword>/review', methods=['POST'])
+def post_review(keyword):
+    gym_receive = request.form['gym_give']
+    nick_receive = request.form['nick_give']
+    comment_receive = request.form['comment_give']
     doc = {
-
+        'gym': gym_receive,
+        'nick_receive': nick_receive,
+        'comment_receive': comment_receive
     }
+    db.review_comment.insert_one(doc)
+    return jsonify({'msg': '나만의 리뷰를 등록 완료.'})
 
-    db.gyms.insert_one(doc)
 
-    return jsonify({'msg': '설정 완료'})
-
-@app.route("/gyms", methods=["GET"])
-def web_mars_get():
-    order_list = list(db.mars.find({}, {'_id': False}))
-    return jsonify({'orders': order_list})
+@app.route('/detail/<keyword>/review', methods=['GET'])
+def get_review(keyword):
+    gym = keyword
+    review_list = list(db.review_comment.find({'gym': gym}, {'_id': False}))
+    if (len(review_list) == 0):
+        return jsonify({'result': 'empty', 'msg': 'There is no review in this gym. Sorry...'})
+    else:
+        return jsonify({'result': 'success', 'review_list': review_list})
 
 if __name__ == '__main__':
    app.run('0.0.0.0', port=5000, debug=True)

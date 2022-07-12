@@ -167,15 +167,18 @@
 
     <script>
         function register(){
+
             $.ajax({
                 type: "POST",
                 url: "/api/register",
                 data: {
-                    id_give: $('#userid').val(),
+                    id_give: $('#userid').val().toLowerCase(),
                     pw_give: $('#userpw').val(),
                     pw_check_give: $('#userpw_check').val(),
                     nick_give: $('#usernickname').val(),
                     gender_give: $('#usergender').val()
+
+
                 },
                 success: function (response){
                     if(response['result'] == 'empty'){
@@ -194,6 +197,47 @@
             })
 
         }
+         function id_check(){
+             $.ajax({
+                type: "POST",
+                url: "/api/register/id_check",
+                data: {
+                    id_give: $('#userid').val().toLowerCase(),
+                },
+                 success: function (response) {
+                    console.log(response)
+                    if (response['result'] == 'empty') {
+                        alert(response['msg'])
+                    } else if (response['result'] == 'fail') {
+                        alert(response['msg'])
+                    } else {
+                        alert(response['msg'])
+                    }
+                }
+             })
+
+         }
+          function nick_check(){
+             $.ajax({
+                type: "POST",
+                url: "/api/register/nick_check",
+                data: {
+                    nick_give: $('#usernickname').val().toLowerCase(),
+                },
+                 success: function (response) {
+                    console.log(response)
+                    if (response['result'] == 'empty') {
+                        alert(response['msg'])
+                    } else if (response['result'] == 'fail') {
+                        alert(response['msg'])
+                    } else {
+                        alert(response['msg'])
+                    }
+                }
+             })
+
+         }
+
     </script>
 </head>
 <body>
@@ -210,10 +254,10 @@
                 <div class = "myreg">
                     <div class="input-group mb-3">
                         <span class="input-group-text" id="reg_id">ID</span>
-                        <input id="userid" type="text" class="form-control" placeholder="ID를 입력하세요" aria-label="ID를 입력하세요"
+                        <input id="userid" type="text" class="form-control" placeholder="ID를 소문자로 입력해주세요" aria-label="ID를 입력하세요"
                                aria-describedby="basic-addon1">
                         <div class="id_check">
-                              <button type="button" class="btn btn-outline-secondary">중복 확인</button>
+                              <button type="button" class="btn btn-outline-secondary" onclick="id_check()">중복 확인</button>
                         </div>
                     </div>
                     <div class="input-group mb-3">
@@ -238,6 +282,9 @@
                         <span class="input-group-text" id="reg_nicname">nicname</span>
                         <input id="usernickname" type="adress" class="form-control" placeholder="닉네임을 입력하세요" aria-label="ID를 입력하세요"
                                aria-describedby="basic-addon1">
+                        <div class="id_check">
+                              <button type="button" class="btn btn-outline-secondary" onclick="nick_check()">중복 확인</button>
+                        </div>
                     </div>
                     <div class="input-group mb-3">
                         <div class="registerbox">
