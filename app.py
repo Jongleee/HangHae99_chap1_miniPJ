@@ -163,7 +163,7 @@ def detail(keyword):
         # gymname= db.gymname.find_one({"title": keyword}, {"_id": False})
         # 세부사항1 = db.세부사항1.find_one({"title": keyword}, {"_id": False})
         # 세부사항2= db.세부사항2.find_one({"target": keyword}, {"_id": False})
-        return render_template('detail.html', nickname=nick, gym=keyword ,gymname=gymname)
+        return render_template('detail.html', nickname=nick, gym=keyword)
 
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for("home"))
