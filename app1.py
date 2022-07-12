@@ -8,7 +8,7 @@ db = client.project  # mongodb atlas 내 프로젝트명
 
 @app.route('/')
 def main():
-    return render_template("index.html")
+    return render_template("login.html")
 
 @app.route('/detail/<keyword>')
 def detail(keyword):
