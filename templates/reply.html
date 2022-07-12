@@ -8,6 +8,9 @@
             integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
             crossorigin="anonymous"></script>
     <script>
+        $(document).ready(function(){
+            close_post()
+        });
 
 
     show_review()
@@ -95,7 +98,6 @@
 
             <!--인풋박스-->
             <div id="posting-box" class="posting-box">
-                <!-- ##인풋박스 및 저장버튼 - 저장버튼 중간에 가게하는 방법 무엇일까여? 왜 안될까요? -->
                 <div class="form-group">
                     <input class="form-control" id="comment" rows="3"
                            placeholder="{{ gym }}에 대한 나의 평가를 알려주세요!">
