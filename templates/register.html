@@ -164,6 +164,37 @@
 
         }
     </style>
+
+    <script>
+        function register(){
+            $.ajax({
+                type: "POST",
+                url: "/api/register",
+                data: {
+                    id_give: $('#userid').val(),
+                    pw_give: $('#userpw').val(),
+                    pw_check_give: $('#userpw_check').val(),
+                    nick_give: $('#usernickname').val(),
+                    gender_give: $('#usergender').val()
+                },
+                success: function (response){
+                    if(response['result'] == 'empty'){
+                        alert(response['msg'])
+                    } else if(response['result'] == 'pw_error'){
+                        alert(response['msg'])
+                    } else if(response['result'] == 'nickerror'){
+                        alert(response['msg'])
+                    } else if(response['result'] == 'fail'){
+                        alert(response['msg'])
+                    } else{
+                        alert(response['msg'])
+                        window.location.href = '/login'
+                    }
+                }
+            })
+
+        }
+    </script>
 </head>
 <body>
         <div class="background">
@@ -179,7 +210,7 @@
                 <div class = "myreg">
                     <div class="input-group mb-3">
                         <span class="input-group-text" id="reg_id">ID</span>
-                        <input type="text" class="form-control" placeholder="ID를 입력하세요" aria-label="ID를 입력하세요"
+                        <input id="userid" type="text" class="form-control" placeholder="ID를 입력하세요" aria-label="ID를 입력하세요"
                                aria-describedby="basic-addon1">
                         <div class="id_check">
                               <button type="button" class="btn btn-outline-secondary">중복 확인</button>
@@ -187,17 +218,17 @@
                     </div>
                     <div class="input-group mb-3">
                         <span class="input-group-text" id="reg_pw">PW</span>
-                        <input type="password" class="form-control" placeholder="PW를 입력하세요" aria-label="ID를 입력하세요"
+                        <input id="userpw" type="password" class="form-control" placeholder="PW를 입력하세요" aria-label="ID를 입력하세요"
                                aria-describedby="basic-addon1">
                     </div>
                     <div class="input-group mb-3">
                         <span class="input-group-text" id="reg_pw_again">PW</span>
-                        <input type="password" class="form-control" placeholder="PW를 한번더 입력하세요" aria-label="ID를 입력하세요"
+                        <input id="userpw_check" type="password" class="form-control" placeholder="PW를 한번더 입력하세요" aria-label="ID를 입력하세요"
                                aria-describedby="basic-addon1">
                     </div>
                     <div class="input-group mb-3">
                           <span class="input-group-text" id="reg_gender">Gender</span>
-                        <select class="form-select" aria-label="Default select example">
+                        <select id="usergender" class="form-select" aria-label="Default select example">
                             <option selected>성별을 선택해주세요</option>
                             <option value="1">남자</option>
                             <option value="2">여자</option>
@@ -205,13 +236,13 @@
                     </div>
                     <div class="input-group mb-3">
                         <span class="input-group-text" id="reg_nicname">nicname</span>
-                        <input type="adress" class="form-control" placeholder="닉네임을 입력하세요" aria-label="ID를 입력하세요"
+                        <input id="usernickname" type="adress" class="form-control" placeholder="닉네임을 입력하세요" aria-label="ID를 입력하세요"
                                aria-describedby="basic-addon1">
                     </div>
                     <div class="input-group mb-3">
                         <div class="registerbox">
                             <div class="registerbtn">
-                                <button type="button" class="btn btn-outline-secondary">회원 가입</button>
+                                <button type="button" class="btn btn-outline-secondary" onclick="register()">회원 가입</button>
                             </div>
                             <div class="register_cancle">
                                 <button type="button" class="btn btn-outline-secondary" onclick="window.location.href = '/login'">취소</button>
