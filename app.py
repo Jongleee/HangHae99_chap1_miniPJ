@@ -152,9 +152,21 @@ def register_nick_check():
 
 
 
-@app.route('/detail/<keyword>')
+
+@app.route('/detail/<keyword>/')
 def detail(keyword):
-    return render_template("reply.html", gym=keyword,nickname='nick')
+    token_receive = request.cookies.get('mytoken')
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        user_info = db.users.find_one({"id": payload['id']}, {"_id": False})
+        nick = user_info["nick"]
+        # gymname= db.gymname.find_one({"title": keyword}, {"_id": False})
+        # 세부사항1 = db.세부사항1.find_one({"title": keyword}, {"_id": False})
+        # 세부사항2= db.세부사항2.find_one({"target": keyword}, {"_id": False})
+        return render_template('detail.html', nickname=nick, gym=keyword)
+
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return redirect(url_for("home"))
 
 # 회원별 운동 시설 평가 기능: 평가, 회원의 닉네임 가져오기
 @app.route('/detail/<keyword>/review', methods=['POST'])
