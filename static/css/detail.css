@@ -83,6 +83,10 @@
   color: #ffffff;
   border: solid 1px white;
 }
+.showtable > p {
+  text-align: center;
+  font-size: 25px;
+}
 
 .posting-box {
   width: 500px;

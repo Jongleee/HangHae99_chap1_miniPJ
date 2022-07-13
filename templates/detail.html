@@ -115,19 +115,6 @@
 
       show_review();
   </script>
-  <style>
-    {#.left {#}
-    {#    width: 70%;#}
-    {#    height: 400px;#}
-    {#    float: left;#}
-    {#    box-sizing: border-box;#}
-    {#    background: #8977ad;#}
-    {#    display: flex;#}
-    {#    justify-content: center;#}
-    {#    align-items: center;#}
-    {
-    #}#}
-  </style>
 </head>
 <body>
 <!-- 내비게이션 바 -->
@@ -199,7 +186,13 @@
 <script>
     //지도위에 현재 로드뷰의 위치와, 각도를 표시하기 위한 map walker 아이콘 생성 클래스
     function MapWalker(position) {
-
+        // 새로고침 기능
+        window.onload = function () {
+            if (!window.location.hash) {
+                window.location = window.location + '#loaded';
+                window.location.reload();
+            }
+        }
         //커스텀 오버레이에 사용할 map walker 엘리먼트
         var content = document.createElement('div');
         var figure = document.createElement('div');
@@ -354,7 +347,7 @@
     </thead>
     <tbody id="reviewitems"></tbody>
   </table>
-  <p id="explain_noreview" style="text-align: center; font-size: 12px"></p>
+  <p id="explain_noreview"></p>
 </div>
 </body>
 </html>
