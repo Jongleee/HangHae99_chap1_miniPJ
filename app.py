@@ -3,9 +3,8 @@ from flask import Flask, render_template, request, jsonify, redirect, url_for
 app = Flask(__name__)
 
 from pymongo import MongoClient
-client = MongoClient('mongodb://test:test@localhost', 27017)
-# client = MongoClient('mongodb+srv://test:sparta@cluster0.lce4j.mongodb.net/Cluster0?retryWrites=true&w=majority')
-
+# client = MongoClient('mongodb://test:test@localhost', 27017)
+client = MongoClient('mongodb+srv://test:sparta@cluster0.lce4j.mongodb.net/Cluster0?retryWrites=true&w=majority')
 # client = MongoClient('mongodb+srv://test:sparta@cluster0.rv5esal.mongodb.net/Cluster0?retryWrites=true&w=majority')
 db = client.dbsparta
 
@@ -178,7 +177,8 @@ def api_login():
             'id': id_receive,
             'exp': datetime.datetime.utcnow() + datetime.timedelta(seconds=60 * 60 * 24)
         }
-        token = jwt.encode(payload, SECRET_KEY, algorithm='HS256').decode('utf-8')
+        token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
+        # .decode('utf-8')
 
         return jsonify({'result': 'success', 'token': token})
     else:
