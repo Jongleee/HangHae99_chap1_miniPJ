@@ -38,6 +38,7 @@ def save_diary():
 				count += 1
 				db.health.insert_one(
 					{'title': tt, 'add': aa,'num':count})
+				return jsonify({'msg': '등록 완료!'})
 				break
 
 
@@ -48,31 +49,6 @@ def show_diary():
 	print(sample_receive)
 	return jsonify({'msg': 'GET 연결 완료!'})
 
-url = "https://search.naver.com/search.naver?where=nexearch&sm=top_hty&fbm=1&ie=utf8&query=%EA%B0%95%EB%82%A8%EA%B5%AC+%ED%97%AC%EC%8A%A4%EC%9E%A5"
-headers = {
-	'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36'}
-data = requests.get(url, headers=headers)
-
-req = data.text
-soup = BeautifulSoup(req, 'html.parser')
-
-gyms = soup.select('#loc-main-section-root > section > div > ul')
-
-
-for gym in gyms:
-	gymTitle = gym.select('div._3ZU00._1rBq3 > a:nth-child(1) > div._2w9xx > div > span.place_bluelink._3Apve')
-	gymAdd = gym.select('div._3ZU00._1rBq3 > div._1B9G6 > div > span > a > span._2Po-x')
-	for t in gymTitle:
-		for a in gymAdd:
-			print(t.text.strip(),a.text.strip())
-			break
-
-# for gymT in gymTitle:
-	# 	gym_title = gymT.text
-	# 	print(gym_title)
-	# for gymA in gymAdd:
-	# 	gym_address = gymA.text
-	# 	print(gym_address)
 
 @app.route('/')
 def home():
