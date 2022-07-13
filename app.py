@@ -3,8 +3,8 @@ from flask import Flask, render_template, request, jsonify, redirect, url_for
 app = Flask(__name__)
 
 from pymongo import MongoClient
-
-client = MongoClient('mongodb+srv://test:sparta@cluster0.lce4j.mongodb.net/Cluster0?retryWrites=true&w=majority')
+client = MongoClient('mongodb://test:test@localhost', 27017)
+# client = MongoClient('mongodb+srv://test:sparta@cluster0.lce4j.mongodb.net/Cluster0?retryWrites=true&w=majority')
 
 # client = MongoClient('mongodb+srv://test:sparta@cluster0.rv5esal.mongodb.net/Cluster0?retryWrites=true&w=majority')
 db = client.dbsparta
@@ -178,7 +178,7 @@ def api_login():
             'id': id_receive,
             'exp': datetime.datetime.utcnow() + datetime.timedelta(seconds=60 * 60 * 24)
         }
-        token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
+        token = jwt.encode(payload, SECRET_KEY, algorithm='HS256').decode('utf-8')
 
         return jsonify({'result': 'success', 'token': token})
     else:
@@ -218,7 +218,7 @@ def register_nick_check():
 # 데이터 입력용 rest api키
 # import requests
 #
-# searching = '송파 헬스장'
+# searching = '강남구 헬스장'
 # url = 'https://dapi.kakao.com/v2/local/search/keyword.json?query={}'.format(searching)
 # headers = {
 #     "Authorization": "KakaoAK 264e01f5ee4957795f4b1518a3c2e783"
@@ -235,7 +235,7 @@ def register_nick_check():
 #         'gra':places[i]['road_address_name'],
 #         'gx':places[i]['x'],
 #         'gy':places[i]['y'],
-#         'gunum':3
+#         'gunum':1
 #     }
 #     db.scgym.insert_one(doc)
 
