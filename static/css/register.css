@@ -1,16 +1,14 @@
 * {
   background-color: lightseagreen;
   font-family: 'Dongle', sans-serif;
+  box-sizing: border-box;
 }
-
 html {
   height: 100%;
 }
-
 body {
   height: 100%;
 }
-
 .background {
   width: 100%;
   height: 100%;
@@ -18,7 +16,6 @@ body {
   justify-content: center;
   align-items: center;
 }
-
 .wrap {
   width: 100%;
   height: 100%;
@@ -26,32 +23,6 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-}
-
-.titlebox {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  margin: 2% 0 2% 0;
-  color: white;
-}
-
-.picture {
-  width: 70px;
-  heigth: 70px;
-  margin-bottom: 10px;
-}
-
-.titlebox > h1 {
-  font-size: 60px;
-  margin-bottom: 0;
-  font-family: 'Dongle', sans-serif;
-  margin-bottom: 10px;
-}
-
-.titlebox > .cup {
-  margin-right: 10px;
 }
 .myreg {
   width: 80%;
@@ -61,6 +32,35 @@ body {
   justify-content: center;
   align-items: center;
 }
+.registerbox {
+  width: 80%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.registerbtn,
+.registerCancelBtn {
+  background-color: white;
+  color: black;
+  border: 1px solid white;
+  border-radius: 10px;
+  font-family: 'Dongle', sans-serif;
+}
+.registerbtn {
+  width: 90px;
+  margin-right: 10px;
+}
+.registerbtn,
+.registerCancelBtn > span {
+  background-color: white;
+}
+.registerbtn:hover {
+  font-weight: bold;
+}
+.registerCancelBtn:hover {
+  font-weight: bold;
+}
 
 .registerbox {
   width: 80%;
@@ -68,48 +68,28 @@ body {
   flex-direction: row;
   justify-content: center;
   align-items: center;
-}
-
-.btns {
-  margin: 1% 0 0 0;
-  display: flex;
-  justify-content: center;
-  width: 80%;
-}
-
-.registerbtn,
-id_check {
-  background-color: white;
-  color: black;
-  border: 1px outset white;
-  border-radius: 10px;
-  font-family: 'Dongle', sans-serif;
-  margin-right: 1%;
-  padding: 1%;
-}
-.register_cancle {
-  background-color: white;
-  color: black;
-  border: 1px outset white;
-  border-radius: 10px;
-  font-family: 'Dongle', sans-serif;
-  margin-right: 1%;
-  padding: 1%;
-}
-
-.col-auto > button {
-  background-color: rebeccapurple;
-  border-radius: 10px;
-  margin: 10px 0px 0px 10px;
+  margin: 0 auto;
 }
 .id_check {
   background-color: white;
-  border: 1px outset green;
-  color: black;
   border-radius: 10px;
-  font-family: 'Dongle', sans-serif;
+}
+.id_check > .btn-outline-secondary {
+  margin-top: 5px;
+}
+.btn-outline-secondary {
+  color: #6c757d;
+  border: none;
+  font-size: 20px;
+  border: none;
+}
+.btn-outline-secondary:hover {
+  color: #6c757d;
+  font-weight: bold;
+  background: none;
 }
 
+/* 제목창 */
 @media screen and (max-width: 700px) {
   .titlebox {
     display: flex;
@@ -120,10 +100,39 @@ id_check {
     color: white;
     width: 100%;
   }
-
-  .titlebox > h1 {
-    font-size: 50px;
-    margin-bottom: 0;
-    font-family: 'Dongle', sans-serif;
-  }
+}
+.titlebox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  margin: 2% 0 2% 0;
+  color: white;
+}
+.titlebox > h1 {
+  font-size: 90px;
+  margin-bottom: 0px;
+  font-family: 'Dongle', sans-serif;
+}
+.titlebox > img {
+  width: 70px;
+  height: 70px;
+}
+/* 인풋창 */
+.input-group.mb-3 {
+  max-width: 500px;
+  font-size: 30px;
+}
+.input-group:not(.has-validation)
+  > :not(:last-child):not(.dropdown-toggle):not(.dropdown-menu) {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  font-size: 30px;
+}
+.input-group
+  > :not(:first-child):not(.dropdown-menu):not(.valid-tooltip):not(.valid-feedback):not(.invalid-tooltip):not(.invalid-feedback) {
+  margin-left: -1px;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  font-size: 30px;
 }
