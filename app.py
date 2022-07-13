@@ -18,7 +18,7 @@ import jwt, datetime, hashlib
 
 @app.route('/')
 def home():
-    gym_card = list(db.scgym.find({}, {'_id': False}).limit(30))
+    gym_card = list(db.scgym.find({'gunum':3}, {'_id': False}).limit(30))
     token_receive = request.cookies.get('mytoken')
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
@@ -189,7 +189,7 @@ def register_nick_check():
 # }
 # places = requests.get(url, headers = headers).json()['documents']
 #
-# for i in range(20):
+# for i in range(15):
 #     doc={
 #         'gymn':places[i]['place_name'],
 #         'gyma':places[i]['address_name'],
@@ -198,7 +198,8 @@ def register_nick_check():
 #         'gurl':places[i]['place_url'],
 #         'gra':places[i]['road_address_name'],
 #         'gx':places[i]['x'],
-#         'gy':places[i]['y']
+#         'gy':places[i]['y'],
+#         'gunum':3
 #     }
 #     db.scgym.insert_one(doc)
 
