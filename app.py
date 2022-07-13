@@ -17,9 +17,43 @@ import jwt, datetime, hashlib
 
 @app.route('/')
 def home():
-    gunum_receive = request.form['gunum_give']
+    gym_card = list(db.scgym.find({'gunum':1}, {'_id': False}).limit(30))
+    token_receive = request.cookies.get('mytoken')
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
 
-    gym_card = list(db.scgym.find({'gunum'}, {'_id': gunum_receive}).limit(30))
+        return render_template('main.html', gym_card=gym_card)
+    except jwt.ExpiredSignatureError:
+        return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
+    except jwt.exceptions.DecodeError:
+        return redirect(url_for("login", msg="로그인 정보가 존재하지 않습니다."))
+@app.route('/1')
+def home1():
+    gym_card = list(db.scgym.find({'gunum':1}, {'_id': False}).limit(30))
+    token_receive = request.cookies.get('mytoken')
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+
+        return render_template('main.html', gym_card=gym_card)
+    except jwt.ExpiredSignatureError:
+        return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
+    except jwt.exceptions.DecodeError:
+        return redirect(url_for("login", msg="로그인 정보가 존재하지 않습니다."))
+@app.route('/2')
+def home2():
+    gym_card = list(db.scgym.find({'gunum':2}, {'_id': False}).limit(30))
+    token_receive = request.cookies.get('mytoken')
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+
+        return render_template('main.html', gym_card=gym_card)
+    except jwt.ExpiredSignatureError:
+        return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
+    except jwt.exceptions.DecodeError:
+        return redirect(url_for("login", msg="로그인 정보가 존재하지 않습니다."))
+@app.route('/3')
+def home3():
+    gym_card = list(db.scgym.find({'gunum':3}, {'_id': False}).limit(30))
     token_receive = request.cookies.get('mytoken')
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
@@ -190,7 +224,7 @@ def register_nick_check():
 # }
 # places = requests.get(url, headers = headers).json()['documents']
 #
-# for i in range(20):
+# for i in range(15):
 #     doc={
 #         'gymn':places[i]['place_name'],
 #         'gyma':places[i]['address_name'],
@@ -199,7 +233,8 @@ def register_nick_check():
 #         'gurl':places[i]['place_url'],
 #         'gra':places[i]['road_address_name'],
 #         'gx':places[i]['x'],
-#         'gy':places[i]['y']
+#         'gy':places[i]['y'],
+#         'gunum':3
 #     }
 #     db.scgym.insert_one(doc)
 
