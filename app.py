@@ -3,6 +3,7 @@ from flask import Flask, render_template, request, jsonify, redirect, url_for
 app = Flask(__name__)
 
 from pymongo import MongoClient
+
 client = MongoClient('mongodb+srv://test:sparta@cluster0.lce4j.mongodb.net/Cluster0?retryWrites=true&w=majority')
 
 # client = MongoClient('mongodb+srv://test:sparta@cluster0.rv5esal.mongodb.net/Cluster0?retryWrites=true&w=majority')
@@ -13,6 +14,7 @@ db = client.dbsparta
 SECRET_KEY = 'SPARTA'
 
 import jwt, datetime, hashlib
+
 
 @app.route('/')
 def home():
@@ -33,9 +35,11 @@ def home():
 def login():
     return render_template('login.html')
 
+
 @app.route('/register')
 def register():
     return render_template('register.html')
+
 
 @app.route('/main')
 def main():
@@ -75,9 +79,6 @@ def listing():
 #
 
 
-
-
-
 # [회원가입 API]
 # id, pw, nickname을 받아서, mongoDB에 저장합니다.
 # 저장하기 전에, pw를 sha256 방법(=단방향 암호화. 풀어볼 수 없음)으로 암호화해서 저장합니다.
@@ -89,35 +90,36 @@ def api_register():
     gender_receive = request.form['gender_give']
     nick_receive = request.form['nick_give']
 
-    print(id_receive,pw_receive,pw_check_receive,gender_receive,nick_receive)
+    print(id_receive, pw_receive, pw_check_receive, gender_receive, nick_receive)
 
     if id_receive == '':
         return jsonify({'result': 'empty', 'msg': '아이디를 입력해주세요.'})
     elif pw_receive == '':
         return jsonify({'result': 'empty', 'msg': '비밀번호를 입력해주세요.'})
     elif pw_check_receive == '':
-        return jsonify({'result': 'empty','msg':'비밀번호를 입력해주세요'})
+        return jsonify({'result': 'empty', 'msg': '비밀번호를 입력해주세요'})
     elif gender_receive == '':
-        return jsonify({'result': 'empty','msg':'성별을 선택해주세요'})
+        return jsonify({'result': 'empty', 'msg': '성별을 선택해주세요'})
     elif nick_receive == '':
-        return jsonify({'result': 'empty','msg':'닉네임을 입력해주세요'})
+        return jsonify({'result': 'empty', 'msg': '닉네임을 입력해주세요'})
     else:
         if pw_receive != pw_check_receive:
-            return jsonify({'result': 'empty','msg':'비밀번호가 서로 다릅니다.'})
+            return jsonify({'result': 'empty', 'msg': '비밀번호가 서로 다릅니다.'})
         else:
             pw_hash = hashlib.sha256(pw_receive.encode('utf-8')).hexdigest()
 
-            id_result = db.users.find_one({'id':id_receive})
-            nick_result = db.users.find_one({'id':nick_receive})
+            id_result = db.users.find_one({'id': id_receive})
+            nick_result = db.users.find_one({'id': nick_receive})
 
             if id_result is not None:
                 return jsonify({'result': 'fail', 'msg': '중복된 아이디가 있습니다.'})
-            elif nick_result is not  None:
+            elif nick_result is not None:
                 return jsonify({'result': 'fail', 'msg': '중복된 닉네임이 있습니다.'})
             else:
                 db.users.insert_one(
-                    {'id': id_receive, 'pw': pw_hash, 'nick': nick_receive,'gender': gender_receive})
+                    {'id': id_receive, 'pw': pw_hash, 'nick': nick_receive, 'gender': gender_receive})
                 return jsonify({'result': 'success', 'msg': '회원가입을 완료했습니다.'})
+
 
 # [로그인 API]
 # id, pw를 받아서 맞춰보고, 토큰을 만들어 발급합니다.
@@ -130,8 +132,8 @@ def api_login():
     pw_hash = hashlib.sha256(pw_receive.encode('utf-8')).hexdigest()
 
     # id, 암호화된pw을 가지고 해당 유저를 찾습니다.
-    result = db.users.find_one({'id':id_receive,'pw':pw_hash})
-    
+    result = db.users.find_one({'id': id_receive, 'pw': pw_hash})
+
     if id_receive == '':
         return jsonify({'result': 'fail_id', 'msg': '아이디를 입력해주세요'})
     elif pw_receive == '':
@@ -139,14 +141,14 @@ def api_login():
     elif result is not None:
         payload = {
             'id': id_receive,
-            'exp': datetime.datetime.utcnow() + datetime.timedelta(seconds=60*60*24)
+            'exp': datetime.datetime.utcnow() + datetime.timedelta(seconds=60 * 60 * 24)
         }
         token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
 
         return jsonify({'result': 'success', 'token': token})
     else:
         return jsonify({'result': 'fail', 'msg': '아이디와 비밀번호를 확인해주세요'})
-    
+
 
 # [ID_Check]
 # id, pw를 받아서 맞춰보고, 토큰을 만들어 발급합니다.
@@ -159,9 +161,10 @@ def register_id_check():
     if checkid_receive == '':
         return jsonify({'result': 'empty', 'msg': '아이디를 입력해주세요.'})
     elif result_id is not None:
-        return jsonify({'result':'fail','msg':'중복된 아이디가 있습니다.'})
+        return jsonify({'result': 'fail', 'msg': '중복된 아이디가 있습니다.'})
     else:
         return jsonify({'id': checkid_receive, 'result': 'success', 'msg': '사용 가능한 아이디입니다.'})
+
 
 @app.route('/api/register/nick_check', methods=['POST'])
 def register_nick_check():
@@ -172,10 +175,9 @@ def register_nick_check():
     if checknick_receive == '':
         return jsonify({'result': 'empty', 'msg': '닉네임을 입력해주세요.'})
     elif result_id is not None:
-        return jsonify({'result':'fail','msg':'중복된 닉네임이 있습니다.'})
+        return jsonify({'result': 'fail', 'msg': '중복된 닉네임이 있습니다.'})
     else:
         return jsonify({'id': checknick_receive, 'result': 'success', 'msg': '사용 가능한 닉네임입니다.'})
-
 
 
 # 데이터 입력용
@@ -202,8 +204,6 @@ def register_nick_check():
 #     db.scgym.insert_one(doc)
 
 
-
-
 @app.route('/detail/<keyword>/')
 def detail(keyword):
     token_receive = request.cookies.get('mytoken')
@@ -219,6 +219,7 @@ def detail(keyword):
 
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for("home"))
+
 
 # 회원별 운동 시설 평가 기능: 평가, 회원의 닉네임 가져오기
 @app.route('/detail/<keyword>/review', methods=['POST'])
@@ -244,5 +245,6 @@ def get_review(keyword):
     else:
         return jsonify({'result': 'success', 'review_list': review_list})
 
+
 if __name__ == '__main__':
-   app.run('0.0.0.0', port=5000, debug=True)
+    app.run('0.0.0.0', port=5000, debug=True)
