@@ -5,7 +5,6 @@ app = Flask(__name__)
 from pymongo import MongoClient
 
 client = MongoClient('mongodb+srv://test:sparta@cluster0.lce4j.mongodb.net/Cluster0?retryWrites=true&w=majority')
-
 # client = MongoClient('mongodb+srv://test:sparta@cluster0.rv5esal.mongodb.net/Cluster0?retryWrites=true&w=majority')
 db = client.dbsparta
 
