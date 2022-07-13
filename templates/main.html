@@ -1,143 +1,159 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8"/>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>운동갈지도</title>
+  <meta charset="UTF-8"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>운동갈지도</title>
 
-    <!-- og 태그 -->
-    <meta property="og:title" content="운동갈지도"/>
-    <meta property="og:description" content="이거 보면 운동갈지도?"/>
-    <meta property="og:image" content="/static/image/og.png"/>
+  <!-- og 태그 -->
+  <meta property="og:title" content="운동갈지도"/>
+  <meta property="og:description" content="이거 보면 운동갈지도?"/>
+  <meta property="og:image" content="/static/image/og.png"/>
 
-    <!-- 파비콘 -->
-    <link
-            rel="icon"
-            type="image/png"
-            sizes="16x16"
-            href="../static/images/favicon.png"
-    />
+  <!-- 파비콘 -->
+  <link
+          rel="icon"
+          type="image/png"
+          sizes="16x16"
+          href="../static/images/favicon.png"
+  />
 
-    <!-- 부트스트랩 cdn -->
-    <link
-            href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
-            rel="stylesheet"
-            integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
-            crossorigin="anonymous"
-    />
-    <link
-            rel="stylesheet"
-            href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-            integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
-            crossorigin="anonymous"
-    />
-    <!-- 구글폰트 -->
-    <link rel="preconnect" href="https://fonts.googleapis.com"/>
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-    <link
-            href="https://fonts.googleapis.com/css2?family=Dongle&family=Gothic+A1&family=Nanum+Gothic:wght@400;700&display=swap"
-            rel="stylesheet"
-    />
-    <script
-            src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-            crossorigin="anonymous"
-    ></script>
-    <script
-            src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
-            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-            crossorigin="anonymous"
-    ></script>
-    <!-- 제이쿼리 cdn -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <link rel="stylesheet" href="../static/css/main.css"/>
-    <link rel="stylesheet" href="../static/css/navbar.css"/>
-    <!-- 쿠키 삭제용 쿼리 -->
+  <!-- 부트스트랩 cdn -->
+  <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+          crossorigin="anonymous"
+  />
+  <link
+          rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+          crossorigin="anonymous"
+  />
+  <!-- 구글폰트 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link
+          href="https://fonts.googleapis.com/css2?family=Dongle&family=Gothic+A1&family=Nanum+Gothic:wght@400;700&display=swap"
+          rel="stylesheet"
+  />
+  <script
+          src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+          integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+          crossorigin="anonymous"
+  ></script>
+  <script
+          src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+          integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+          crossorigin="anonymous"
+  ></script>
+  <!-- 제이쿼리 cdn -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <link rel="stylesheet" href="../static/css/main.css"/>
+  <link rel="stylesheet" href="../static/css/navbar.css"/>
+  <!-- 쿠키 삭제용 쿼리 -->
 
-    <script src=" https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            listing1();
-        });
+  <script src=" https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+  <script>
+      $(document).ready(function () {
+          listing1();
+      });
 
-        {#function listing1() {#}
-        {#    $.ajax({#}
-        {#        type: 'POST',#}
-        {#        url: '/api/main',#}
-        {#        data: {sample_give: '샘플데이터'},#}
-        {#        success: function (response) {#}
-        {#            alert(response['msg']);#}
-        {#        },#}
-        {#    });#}
-        {##}
-        {#    $.ajax({#}
-        {#        type: '/api/main',#}
-        {#        url: '/diary?sample_give=샘플데이터',#}
-        {#        data: {},#}
-        {#        success: function (response) {#}
-        {#            alert(response['msg']);#}
-        {#        },#}
-        {#    });#}
-        {#}#}
+      function listing1() {
+          $.ajax({
+              type: 'POST',
+              url: '/api/main',
+              data: {sample_give: '샘플데이터'},
+              success: function (response) {
+                  alert(response['msg']);
+              },
+          });
 
-        function sign_out() {
-            $.removeCookie('mytoken', {path: '/'});
-            alert('로그아웃했습니다.');
-            window.location.href = '/login';
-        }
-    </script>
+          $.ajax({
+              type: '/api/main',
+              url: '/diary?sample_give=샘플데이터',
+              data: {},
+              success: function (response) {
+                  alert(response['msg']);
+              },
+          });
+      };
+
+      function sign_out() {
+          $.removeCookie('mytoken', {path: '/'});
+          alert('로그아웃했습니다.');
+          window.location.href = '/login';
+      }
+
+      function gunum() {
+          $.ajax({
+              type: 'POST',
+              url: '/api/main',
+              data: {gunum_give: $('#gunum_check').val()},
+              success: function (response) {
+                  alert(response['msg']);
+                  test_num = $('#gunum_check').val()
+                  console.log(test_num)
+              },
+          });
+      }
+  </script>
 </head>
 <body>
 <!-- 내비게이션 바 -->
 <header>
-    <nav>
-        <div class="nav-container">
-            <a href="./main.html" class="logo">
-                <img
-                        src="../static/images/mainImg.png"
-                        alt="logo"
-                        width="30"
-                        height="25"
-                />
-                <span class="logo-span">운동갈지도</span>
-            </a>
-            <div class="logoutBtn">
-                <button onclick="sign_out()">Logout</button>
-            </div>
-        </div>
-    </nav>
+  <nav>
+    <div class="nav-container">
+      <a href="./main.html" class="logo">
+        <img
+                src="../static/images/mainImg.png"
+                alt="logo"
+                width="30"
+                height="25"
+        />
+        <span class="logo-span">운동갈지도</span>
+      </a>
+      <div class="logoutBtn">
+        <button onclick="sign_out()">Logout</button>
+      </div>
+    </div>
+  </nav>
 </header>
 
 <div class="select-section">
-    <span>구별 헬스장이 궁금하다면?</span>
-    <div class="input-group mb-3">
-        <label class="input-group-text" for="inputGroupSelect01">구</label>
-        <select class="form-select" id="">
-            <option selected>-----</option>
-            <option value="1">강남구</option>
-            <option value="2">서초구</option>
-            <option value="3">송파구</option>
-        </select>
+  <span>구별 헬스장이 궁금하다면?</span>
+  <div class="input-group mb-3">
+    <div class="selectBtn">
+      <button class="sBtn" onclick="" id="btnGangnam">
+        강남구
+      </button>
+      <button class="sBtn" onclick="" id="btnSeocho">
+        서초구
+      </button>
+      <button class="sBtn" onclick="" id="btnSongpa">
+        송파구
+      </button>
     </div>
+    </select>
+  </div>
 </div>
 
 <div class="wrap">
-    <div class="card-columns">
-
-        {% for gym in gym_card %}
-            <div class="card">
-                <img src="" class="card-img-top"/>
-                <div class="card-body">
-                    <a href="/detail/{{ gym.gymn }}">
-                        <h5 class="card-title">{{ gym.gymn }}</h5>
-                    </a>
-                    <p class="card-text">{{ gym.gyma }}</p>
-                </div>
-            </div>
-        {% endfor %}
-
-    </div>
+  <div class="card-columns">
+    {% for gym in gym_card %}
+      <div class="card">
+        <img src="" class="card-img-top"/>
+        <div class="card-body">
+          <a href="/detail/{{ gym.gymn }}">
+            <h5 class="card-title">{{ gym.gymn }}</h5>
+          </a>
+          <p class="card-text">{{ gym.gyma }}</p>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
 </div>
 </body>
 </html>
