@@ -3,7 +3,9 @@ from flask import Flask, render_template, request, jsonify, redirect, url_for
 app = Flask(__name__)
 
 from pymongo import MongoClient
-client = MongoClient('mongodb+srv://test:sparta@cluster0.rv5esal.mongodb.net/Cluster0?retryWrites=true&w=majority')
+client = MongoClient('mongodb+srv://test:sparta@cluster0.lce4j.mongodb.net/Cluster0?retryWrites=true&w=majority')
+
+# client = MongoClient('mongodb+srv://test:sparta@cluster0.rv5esal.mongodb.net/Cluster0?retryWrites=true&w=majority')
 db = client.dbsparta
 
 # JWT 토큰을 만들 때 필요한 비밀문자열입니다. 아무거나 입력해도 괜찮습니다.
@@ -14,9 +16,18 @@ import jwt, datetime, hashlib
 
 @app.route('/')
 def home():
+    print(db.sgym.find({}, {'_id': False}).limit(30))
+    gym_card = list(db.scgym.find({}, {'_id': False}).limit(30))
+    token_receive = request.cookies.get('mytoken')
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
 
+        return render_template('main.html', gym_card=gym_card)
+    except jwt.ExpiredSignatureError:
+        return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
+    except jwt.exceptions.DecodeError:
+        return redirect(url_for("login", msg="로그인 정보가 존재하지 않습니다."))
 
-    return render_template('login.html')
 
 @app.route('/login')
 def login():
@@ -26,26 +37,42 @@ def login():
 def register():
     return render_template('register.html')
 
-@app.route('/main_sh')
+@app.route('/main')
 def main():
     token_receive = request.cookies.get('mytoken')
-
-    return render_template('main_sh.html')
-
-@app.route('/main_sh', methods=['GET'])
-def main_get_nick():
-    token_receive = request.cookies.get('mytoken')
-    
-
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        user_info = db.users.find_one({"id": payload['id']})
-        return jsonify({'result': 'success', 'nickname': user_info['nick']})
-    except jwt.exceptions.DecodeError:
-        return redirect(url_for("login", msg="로그인 정보가 존재하지 않습니다."))
-    except jwt.ExpiredSignatureError:
-        return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
+        user_info = db.users.find_one({"id": payload['id']}, {"_id": False})
+        nick = user_info["nick"]
+        return render_template('main.html', nickname=nick, gym_card=gym_card)
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return redirect(url_for("home"))
 
+
+# DB 데이터 가져오기(메인페이지-헬스장 리스트) : jinja2로 index.html에서 나타내기
+@app.route('/listing', methods=['GET'])
+def listing():
+    gym_card = list(db.scgym.find({}).limit(30))
+    for card in gym_card:
+        card['_id'] = str(card['_id'])
+    return jsonify({'gym_card': gym_card})
+
+
+#
+# @app.route('/main_sh', methods=['GET'])
+# def main_get_nick():
+#     token_receive = request.cookies.get('mytoken')
+#
+#
+#     try:
+#         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+#         user_info = db.users.find_one({"id": payload['id']})
+#         return jsonify({'result': 'success', 'nickname': user_info['nick']})
+#     except jwt.exceptions.DecodeError:
+#         return redirect(url_for("login", msg="로그인 정보가 존재하지 않습니다."))
+#     except jwt.ExpiredSignatureError:
+#         return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
+#
 
 
 
@@ -140,7 +167,7 @@ def register_id_check():
 def register_nick_check():
     checknick_receive = request.form['nick_give']
 
-    result_id = db.users.find_one({'id': checknick_receive})
+    result_id = db.users.find_one({'nick': checknick_receive})
 
     if checknick_receive == '':
         return jsonify({'result': 'empty', 'msg': '닉네임을 입력해주세요.'})
@@ -188,9 +215,6 @@ def detail(keyword):
         return render_template('detail.html', nickname=nick, gym=keyword, scgym=scgym)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for("home"))
-        # gymname= db.gymname.find_one({"title": keyword}, {"_id": False})
-        # 세부사항1 = db.세부사항1.find_one({"title": keyword}, {"_id": False})
-        # 세부사항2= db.세부사항2.find_one({"target": keyword}, {"_id": False})
 
 
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
