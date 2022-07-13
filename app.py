@@ -17,9 +17,7 @@ import jwt, datetime, hashlib
 
 @app.route('/')
 def home():
-    gunum_receive = request.form['gunum_give']
-
-    gym_card = list(db.scgym.find({'gunum'}, {'_id': gunum_receive}).limit(30))
+    gym_card = list(db.scgym.find({}, {'_id': False}).limit(30))
     token_receive = request.cookies.get('mytoken')
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
