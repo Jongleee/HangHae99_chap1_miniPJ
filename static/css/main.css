@@ -21,7 +21,7 @@
   margin-bottom: 0px !important;
 }
 .input-group.mb-3 {
-  max-width: 130px;
+  max-width: 160px;
 }
 .input-group:not(.has-validation) > .dropdown-toggle:nth-last-child(n + 3),
 .input-group:not(.has-validation)
@@ -55,4 +55,16 @@
 }
 .card-text:last-child {
   font-size: 25px;
+}
+.selectBtn > button {
+  font-size: 20px;
+  background-color: lightseagreen;
+  color: black;
+  border: none;
+  margin-right: 10px;
+  border-radius: 20px;
+}
+.selectBtn > .sBtn.disabled {
+  background-color: gray;
+  color: white;
 }
