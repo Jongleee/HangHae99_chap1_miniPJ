@@ -10,6 +10,8 @@
       name="viewport"
       content="width=device-width, initial-scale=1, shrink-to-fit=no"
     />
+
+    <!-- og 태그 -->
     <meta property="og:title" content="운동갈지도" />
     <meta
       property="og:description"
@@ -19,6 +21,7 @@
     <link rel="shortcut icon" href="/static/image/favicon.png" />
     <link rel="icon" href="/static/image/favicon.png" />
 
+    <!-- 부트스트랩 css -->
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css"
@@ -41,6 +44,7 @@
       href="https://fonts.googleapis.com/css2?family=Dongle&family=Gothic+A1&family=Nanum+Gothic:wght@400;700&display=swap"
       rel="stylesheet"
     />
+    <!-- 제이쿼리 -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script
       src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
@@ -48,6 +52,7 @@
       crossorigin="anonymous"
     ></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+    <link rel="stylesheet" href="../static/css/register.css" />
 
     <script>
       function register() {
@@ -120,13 +125,11 @@
   <body>
     <div class="background">
       <div class="wrap">
-        <div class="titlebox">
-          <div class="cup">
-            <img class="picture" src="/static/image/title.png" alt="" />
-          </div>
-          <h1 class="titlename" id="realname">운동갈지도</h1>
-        </div>
         <div class="myreg">
+          <div class="titlebox">
+            <img src="../static/images/mainImg.png" alt="logo" />
+            <h1 class="titlename" id="realname">운동갈지도</h1>
+          </div>
           <div class="input-group mb-3">
             <span class="input-group-text" id="reg_id">ID</span>
             <input
@@ -164,7 +167,7 @@
               id="userpw_check"
               type="password"
               class="form-control"
-              placeholder="PW를 한번더 입력하세요"
+              placeholder="PW를 확인해주세요"
               aria-label="ID를 입력하세요"
               aria-describedby="basic-addon1"
             />
@@ -204,18 +207,14 @@
           <div class="input-group mb-3">
             <div class="registerbox">
               <div class="registerbtn">
-                <button
-                  type="button"
-                  class="btn btn-outline-secondary"
-                  onclick="register()"
-                >
+                <button type="button" class="registerbtn" onclick="register()">
                   회원 가입
                 </button>
               </div>
-              <div class="register_cancle">
+              <div class="register_cancel">
                 <button
                   type="button"
-                  class="btn btn-outline-secondary"
+                  class="registerCancelBtn"
                   onclick="window.location.href = '/login'"
                 >
                   취소
