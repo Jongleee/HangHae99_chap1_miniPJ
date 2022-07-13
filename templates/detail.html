@@ -1,285 +1,561 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <title>운동갈지도</title>
+<head>
 
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>운동갈지도 - {{scgym.gymn}}</title>
+
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
     <!-- og 태그 -->
-    <meta property="og:title" content="운동갈지도" />
-    <meta property="og:description" content="이거 보면 운동갈지도?" />
-    <meta property="og:image" content="/static/image/og.png" />
+    <meta property="og:title" content="운동갈지도"/>
+    <meta property="og:description" content="이거 보면 운동갈지도?"/>
+    <meta property="og:image" content="/static/image/og.png"/>
 
     <!-- 파비콘 -->
     <link
-      rel="icon"
-      type="image/png"
-      sizes="16x16"
-      href="../static/images/favicon.png"
+            rel="icon"
+            type="image/png"
+            sizes="16x16"
+            href="../static/images/favicon.png"
     />
     <!-- 부트스트랩 cdn -->
     <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
-      crossorigin="anonymous"
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+            crossorigin="anonymous"
     />
     <link
-      rel="stylesheet"
-      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
-      crossorigin="anonymous"
+            rel="stylesheet"
+            href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+            integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+            crossorigin="anonymous"
     />
     <!-- 제이쿼리 cdn -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <link rel="stylesheet" href="../static/main.css" />
+    <link rel="stylesheet" href="../static/main.css"/>
     <!-- 구글폰트 -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
     <link
-      href="https://fonts.googleapis.com/css2?family=Dongle&family=Gothic+A1&family=Nanum+Gothic:wght@400;700&display=swap"
-      rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=Dongle&family=Gothic+A1&family=Nanum+Gothic:wght@400;700&display=swap"
+            rel="stylesheet"
     />
 
-    <link rel="stylesheet" href="../static/css/navbar.css" />
+    <link rel="stylesheet" href="/static/css/navbar.css"/>
 
     <!-- 쿠키 삭제용 쿼리 -->
 
     <script src=" https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
 
     <script>
-      $(document).ready(function () {
-        close_post();
-      });
-
-      function sign_out() {
-        $.removeCookie('mytoken', {path: '/'});
-        alert('로그아웃했습니다.');
-        window.location.href = '/login';
-      }
-
-      // {# 리뷰 POST 기능: 전달 데이터 => 코멘트, 닉네임, 메뉴 #}
-
-      function posting() {
-        let comment = $('#comment').val();
-        $.ajax({
-          type: 'POST',
-          url: `/detail/{{ gym }}/review`,
-          data: {
-            gym_give: '{{ gym }}',
-            nick_give: '{{ nickname }}',
-            comment_give: comment,
-          },
-          success: function (response) {
-            $('#explain_noreview').empty();
-            show_review();
-          },
+        $(document).ready(function () {
+            close_post();
         });
-      }
 
-      function show_review() {
-        $('#reviewitems').empty();
-        $.ajax({
-          type: 'GET',
-          url: `/detail/{{ gym }}/review`,
-          data: {},
-          success: function (response) {
-            if (response['result'] === 'empty') {
-              let temp_html = `아직 게시된 리뷰가 없어요! 당신의 {{ gym }} 경험을 알려주세요!`;
-              $('#explain_noreview').text(temp_html);
-            } else if (response['result'] === 'success') {
-              let rows = response['review_list'];
-              for (let i = 0; i < rows.length; i++) {
-                let comment = rows[i]['comment_receive'];
-                let nick_receive = rows[i]['nick_receive'];
-                let temp_html = `<tr>
+        function sign_out() {
+            $.removeCookie('mytoken', {path: '/'});
+            alert('로그아웃했습니다.');
+            window.location.href = '/login';
+        }
+
+        // {# 리뷰 POST 기능: 전달 데이터 => 코멘트, 닉네임, 메뉴 #}
+
+        function posting() {
+            let comment = $('#comment').val();
+            $.ajax({
+                type: 'POST',
+                url: `/detail/{{ gym }}/review`,
+                data: {
+                    gym_give: '{{ gym }}',
+                    nick_give: '{{ nickname }}',
+                    comment_give: comment,
+                },
+                success: function (response) {
+                    $('#explain_noreview').empty();
+                    show_review();
+                },
+            });
+        }
+
+        function show_review() {
+            $('#reviewitems').empty();
+            $.ajax({
+                type: 'GET',
+                url: `/detail/{{ gym }}/review`,
+                data: {},
+                success: function (response) {
+                    if (response['result'] === 'empty') {
+                        let temp_html = `아직 게시된 리뷰가 없어요! 당신의 {{ gym }} 경험을 알려주세요!`;
+                        $('#explain_noreview').text(temp_html);
+                    } else if (response['result'] === 'success') {
+                        let rows = response['review_list'];
+                        for (let i = 0; i < rows.length; i++) {
+                            let comment = rows[i]['comment_receive'];
+                            let nick_receive = rows[i]['nick_receive'];
+                            let temp_html = `<tr>
                                 <td>${comment}</td>
                                 <td>${nick_receive}</td>                            </tr>`;
-                $('#reviewitems').append(temp_html);
-              }
-            }
-          },
-        });
-        close_post();
-      }
+                            $('#reviewitems').append(temp_html);
+                        }
+                    }
+                },
+            });
+            close_post();
+        }
 
-      function close_post() {
-        $('#posting-box').slideUp();
-      }
+        function close_post() {
+            $('#posting-box').slideUp();
+        }
 
-      function open_post() {
-        $('#posting-box').slideDown();
-      }
+        function open_post() {
+            $('#posting-box').slideDown();
+        }
 
-      show_review();
+        show_review();
     </script>
     <style>
-      .left {
-        width: 60%;
-        height: 400px;
-        float: left;
-        box-sizing: border-box;
-        background: #8977ad;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
+        {#.left {#}
+        {#    width: 70%;#}
+        {#    height: 400px;#}
+        {#    float: left;#}
+        {#    box-sizing: border-box;#}
+        {#    background: #8977ad;#}
+        {#    display: flex;#}
+        {#    justify-content: center;#}
+        {#    align-items: center;#}
+        {#}#}
 
-      .right {
-        width: 40%;
-        height: 400px;
-        float: right;
-        box-sizing: border-box;
-        background: #ece6cc;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
+        .right {
+            width: 30%;
+            height: 400px;
+            float: right;
+            box-sizing: border-box;
+            background: #ece6cc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
 
-      .review .posting-box {
-        display: none;
-      }
+        .review .posting-box {
+            display: none;
+        }
 
-      .postbtn {
-        margin: 5px;
-      }
+        .postbtn {
+            margin: 5px;
+        }
 
-      .postbtn > button {
-        float: right;
-        border: 1px;
-        background-color: gray;
-        padding: 3px 10px;
-        border-radius: 40px;
-      }
+        .postbtn > button {
+            float: right;
+            border: 1px;
+            background-color: gray;
+            padding: 3px 10px;
+            border-radius: 40px;
+        }
 
-      .savebtn {
-        margin: 5px;
-      }
+        .savebtn {
+            margin: 5px;
+        }
 
-      .savebtn > button {
-        float: right;
-        border: 1px;
-        background-color: gray;
-        padding: 3px 10px;
-        border-radius: 40px;
-      }
+        .savebtn > button {
+            float: right;
+            border: 1px;
+            background-color: gray;
+            padding: 3px 10px;
+            border-radius: 40px;
+        }
 
-      .review {
-        width: 100%;
-        height: 200px;
+        .review {
+            width: 100%;
+            height: 200px;
 
-        background-image: linear-gradient(
-            0deg,
-            rgba(0, 0, 0, 0.5),
-            rgba(0, 0, 0, 0.5)
-          ),
-          url('https://thumbs.dreamstime.com/b/singer-singing-silhouette-stage-singer-sing-silhouette-stage-135985450.jpg');
-        background-position: center 30%;
-        background-size: cover;
+            background-image: linear-gradient(
+                    0deg,
+                    rgba(0, 0, 0, 0.5),
+                    rgba(0, 0, 0, 0.5)
+            ),
+            url('https://thumbs.dreamstime.com/b/singer-singing-silhouette-stage-singer-sing-silhouette-stage-135985450.jpg');
+            background-position: center 30%;
+            background-size: cover;
 
-        color: white;
-        border-top: solid 3px white;
+            color: white;
+            border-top: solid 3px white;
 
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-      }
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
 
-      .showtable .th1 .rev {
-        max-width: 350px;
-        min-width: 350px;
-        color: #ffffff;
-        border: solid 1px white;
-      }
+        .showtable .th1 .rev {
+            max-width: 350px;
+            min-width: 350px;
+            color: #ffffff;
+            border: solid 1px white;
+        }
 
-      .showtable .th1 .name {
-        color: #ffffff;
-        border: solid 1px white;
-      }
+        .showtable .th1 .name {
+            color: #ffffff;
+            border: solid 1px white;
+        }
 
-      .posting-box {
-        width: 500px;
-        margin-top: 20px;
-      }
+        .posting-box {
+            width: 500px;
+            margin-top: 20px;
+        }
 
-      .showtable .th1 {
-        background-color: #333333;
-        border-top: solid 3px white;
-      }
+        .showtable .th1 {
+            background-color: #333333;
+            border-top: solid 3px white;
+        }
+
+
+        .map_wrap {
+            overflow: hidden;
+            width: 70%;
+            height: 400px;
+            float: left;
+            box-sizing: border-box;
+            background: #8977ad;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* 지도위에 로드뷰의 위치와 각도를 표시하기 위한 map walker 아이콘의 스타일 */
+        .MapWalker {
+            position: absolute;
+            margin: -26px 0 0 -51px
+        }
+
+        .MapWalker .figure {
+            position: absolute;
+            width: 25px;
+            left: 38px;
+            top: -2px;
+            height: 39px;
+            background: url(https://t1.daumcdn.net/localimg/localimages/07/2018/pc/roadview_minimap_wk_2018.png) -298px -114px no-repeat
+        }
+
+        .MapWalker .angleBack {
+            width: 102px;
+            height: 52px;
+            background: url(https://t1.daumcdn.net/localimg/localimages/07/2018/pc/roadview_minimap_wk_2018.png) -834px -2px no-repeat;
+        }
+
+        .MapWalker.m0 .figure {
+            background-position: -298px -114px;
+        }
+
+        .MapWalker.m1 .figure {
+            background-position: -335px -114px;
+        }
+
+        .MapWalker.m2 .figure {
+            background-position: -372px -114px;
+        }
+
+        .MapWalker.m3 .figure {
+            background-position: -409px -114px;
+        }
+
+        .MapWalker.m4 .figure {
+            background-position: -446px -114px;
+        }
+
+        .MapWalker.m5 .figure {
+            background-position: -483px -114px;
+        }
+
+        .MapWalker.m6 .figure {
+            background-position: -520px -114px;
+        }
+
+        .MapWalker.m7 .figure {
+            background-position: -557px -114px;
+        }
+
+        .MapWalker.m8 .figure {
+            background-position: -2px -114px;
+        }
+
+        .MapWalker.m9 .figure {
+            background-position: -39px -114px;
+        }
+
+        .MapWalker.m10 .figure {
+            background-position: -76px -114px;
+        }
+
+        .MapWalker.m11 .figure {
+            background-position: -113px -114px;
+        }
+
+        .MapWalker.m12 .figure {
+            background-position: -150px -114px;
+        }
+
+        .MapWalker.m13 .figure {
+            background-position: -187px -114px;
+        }
+
+        .MapWalker.m14 .figure {
+            background-position: -224px -114px;
+        }
+
+        .MapWalker.m15 .figure {
+            background-position: -261px -114px;
+        }
+
+        .MapWalker.m0 .angleBack {
+            background-position: -834px -2px;
+        }
+
+        .MapWalker.m1 .angleBack {
+            background-position: -938px -2px;
+        }
+
+        .MapWalker.m2 .angleBack {
+            background-position: -1042px -2px;
+        }
+
+        .MapWalker.m3 .angleBack {
+            background-position: -1146px -2px;
+        }
+
+        .MapWalker.m4 .angleBack {
+            background-position: -1250px -2px;
+        }
+
+        .MapWalker.m5 .angleBack {
+            background-position: -1354px -2px;
+        }
+
+        .MapWalker.m6 .angleBack {
+            background-position: -1458px -2px;
+        }
+
+        .MapWalker.m7 .angleBack {
+            background-position: -1562px -2px;
+        }
+
+        .MapWalker.m8 .angleBack {
+            background-position: -2px -2px;
+        }
+
+        .MapWalker.m9 .angleBack {
+            background-position: -106px -2px;
+        }
+
+        .MapWalker.m10 .angleBack {
+            background-position: -210px -2px;
+        }
+
+        .MapWalker.m11 .angleBack {
+            background-position: -314px -2px;
+        }
+
+        .MapWalker.m12 .angleBack {
+            background-position: -418px -2px;
+        }
+
+        .MapWalker.m13 .angleBack {
+            background-position: -522px -2px;
+        }
+
+        .MapWalker.m14 .angleBack {
+            background-position: -626px -2px;
+        }
+
+        .MapWalker.m15 .angleBack {
+            background-position: -730px -2px;
+        }
+
     </style>
-    <title>상세페이지</title>
-  </head>
-  <body>
-    <!-- 내비게이션 바 -->
-    <header>
-      <nav>
+</head>
+<body>
+<!-- 내비게이션 바 -->
+<header>
+    <nav>
         <div class="nav-container">
-          <a href="/" class="logo">
-            <img
-              src="/static/images/mainImg.png"
-              alt="logo"
-              width="30"
-              height="25"
-            />
-            <span class="logo-span">운동갈지도</span>
-          </a>
-          <div class="logoutBtn">
-            <button
-              class="level-item button is-sparta is-outlined"
-              onclick="sign_out()"
-            >
-              Logout
-            </button>
-          </div>
-        </div>
-      </nav>
-    </header>
-    <div class="left">이미지가 들어갈 곳입니다.</div>
-
-    <div class="right">
-        <div class="card">
-            <h5 class="card-header">{{ scgym.gymn }}</h5>
-            <div class="card-body">
-                <h5 class="card-title">{{ scgym.gyma }}</h5>
-                <p class="card-text">{{ scgym.gphone }}</p>
-                <a href="{{ scgym.gurl }}" class="btn btn-primary">바로가기</a>
+            <a href="/" class="logo">
+                <img
+                        src="/static/images/mainImg.png"
+                        alt="logo"
+                        width="30"
+                        height="25"
+                />
+                <span class="logo-span">운동갈지도</span>
+            </a>
+            <div class="logoutBtn">
+                <button
+                        class="level-item button is-sparta is-outlined"
+                        onclick="sign_out()"
+                >
+                    Logout
+                </button>
             </div>
         </div>
-<<<<<<< HEAD
     </nav>
 </header>
-<div class="left">
-    <!-- 이미지 지도를 표시할 div 입니다 -->
-    <div id="staticMap" style="width:100%;height:100%;"></div>
+
+    <div class="map_wrap">
+        <div id="mapWrapper" style="width:50%;height:400px;float:left">
+            <div id="map" style="width:100%;height:100%"></div> <!-- 지도를 표시할 div 입니다 -->
+        </div>
+        <div id="rvWrapper" style="width:50%;height:400px;float:left">
+            <div id="roadview" style="width:100%;height:100%"></div> <!-- 로드뷰를 표시할 div 입니다 -->
+        </div>
+    </div>
+{#<div class="left">#}
+    <!-- 기존 지도 -->
+    {#    <!-- 이미지 지도를 표시할 div 입니다 -->#}
+    {#    <div id="staticMap" style="width:100%;height:100%;"></div>#}
+    {#    <!-- 여기는 JavaScript 키 -->#}
+    {#    <script type="text/javascript"#}
+    {#            src="//dapi.kakao.com/v2/maps/sdk.js?appkey=3611ca5807026b386b58a43405a435f2"></script>#}
+    {#    <script>#}
+    {#        // 이미지 지도에서 마커가 표시될 위치입니다#}
+    {#        var markerPosition = new kakao.maps.LatLng({{scgym.gy}}, {{scgym.gx}});#}
+    {##}
+    {#        // 이미지 지도에 표시할 마커입니다#}
+    {#        // 이미지 지도에 표시할 마커는 Object 형태입니다#}
+    {#        var marker = {#}
+    {#            position: markerPosition#}
+    {#        };#}
+    {##}
+    {#        var staticMapContainer = document.getElementById('staticMap'), // 이미지 지도를 표시할 div#}
+    {#            staticMapOption = {#}
+    {#                center: new kakao.maps.LatLng({{scgym.gy}}, {{scgym.gx}}), // 이미지 지도의 중심좌표#}
+    {#                level: 3, // 이미지 지도의 확대 레벨#}
+    {#                marker: marker // 이미지 지도에 표시할 마커#}
+    {#            };#}
+    {##}
+    {#        // 이미지 지도를 생성합니다#}
+    {#        var staticMap = new kakao.maps.StaticMap(staticMapContainer, staticMapOption);#}
+    {#    </script>#}
+
+    <!--  -->
+
 
     <script type="text/javascript"
             src="//dapi.kakao.com/v2/maps/sdk.js?appkey=3611ca5807026b386b58a43405a435f2"></script>
     <script>
-        // 이미지 지도에서 마커가 표시될 위치입니다
-        {#gx={{scgym.gx}}#}
-        {#gy={{scgym.gy}}#}
-        var markerPosition = new kakao.maps.LatLng({{scgym.gy}}, {{scgym.gx}});
+        //지도위에 현재 로드뷰의 위치와, 각도를 표시하기 위한 map walker 아이콘 생성 클래스
+        function MapWalker(position) {
 
-        // 이미지 지도에 표시할 마커입니다
-        // 이미지 지도에 표시할 마커는 Object 형태입니다
-        var marker = {
-            position: markerPosition
+            //커스텀 오버레이에 사용할 map walker 엘리먼트
+            var content = document.createElement('div');
+            var figure = document.createElement('div');
+            var angleBack = document.createElement('div');
+
+            //map walker를 구성하는 각 노드들의 class명을 지정 - style셋팅을 위해 필요
+            content.className = 'MapWalker';
+            figure.className = 'figure';
+            angleBack.className = 'angleBack';
+
+            content.appendChild(angleBack);
+            content.appendChild(figure);
+
+            //커스텀 오버레이 객체를 사용하여, map walker 아이콘을 생성
+            var walker = new kakao.maps.CustomOverlay({
+                position: position,
+                content: content,
+                yAnchor: 1
+            });
+
+            this.walker = walker;
+            this.content = content;
+        }
+
+        //로드뷰의 pan(좌우 각도)값에 따라 map walker의 백그라운드 이미지를 변경 시키는 함수
+        //background로 사용할 sprite 이미지에 따라 계산 식은 달라 질 수 있음
+        MapWalker.prototype.setAngle = function (angle) {
+
+            var threshold = 22.5; //이미지가 변화되어야 되는(각도가 변해야되는) 임계 값
+            for (var i = 0; i < 16; i++) { //각도에 따라 변화되는 앵글 이미지의 수가 16개
+                if (angle > (threshold * i) && angle < (threshold * (i + 1))) {
+                    //각도(pan)에 따라 아이콘의 class명을 변경
+                    var className = 'm' + i;
+                    this.content.className = this.content.className.split(' ')[0];
+                    this.content.className += (' ' + className);
+                    break;
+                }
+            }
         };
 
-        var staticMapContainer = document.getElementById('staticMap'), // 이미지 지도를 표시할 div
-            staticMapOption = {
-                center: new kakao.maps.LatLng({{scgym.gy}}, {{scgym.gx}}), // 이미지 지도의 중심좌표
-                level: 3, // 이미지 지도의 확대 레벨
-                marker: marker // 이미지 지도에 표시할 마커
+        //map walker의 위치를 변경시키는 함수
+        MapWalker.prototype.setPosition = function (position) {
+            this.walker.setPosition(position);
+        };
+
+        //map walker를 지도위에 올리는 함수
+        MapWalker.prototype.setMap = function (map) {
+            this.walker.setMap(map);
+        };
+
+        /*
+         * 아래부터 실제 지도와 로드뷰 map walker를 생성 및 제어하는 로직
+         */
+        var mapContainer = document.getElementById('map'), // 지도를 표시할 div
+            mapCenter = new kakao.maps.LatLng({{scgym.gy}}, {{scgym.gx}}), // 지도의 가운데 좌표
+            mapOption = {
+                center: mapCenter, // 지도의 중심좌표
+                level: 3 // 지도의 확대 레벨
             };
 
-        // 이미지 지도를 생성합니다
-        var staticMap = new kakao.maps.StaticMap(staticMapContainer, staticMapOption);
+
+        // 지도를 표시할 div와  지도 옵션으로  지도를 생성합니다
+        var map = new kakao.maps.Map(mapContainer, mapOption);
+
+        // 로드뷰 도로를 지도위에 올린다.
+        map.addOverlayMapTypeId(kakao.maps.MapTypeId.ROADVIEW);
+
+        var roadviewContainer = document.getElementById('roadview'); // 로드뷰를 표시할 div
+        var roadview = new kakao.maps.Roadview(roadviewContainer); // 로드뷰 객체
+        var roadviewClient = new kakao.maps.RoadviewClient(); // 좌표로부터 로드뷰 파노ID를 가져올 로드뷰 helper객체
+
+        // 지도의 중심좌표와 가까운 로드뷰의 panoId를 추출하여 로드뷰를 띄운다.
+        roadviewClient.getNearestPanoId(mapCenter, 50, function (panoId) {
+            roadview.setPanoId(panoId, mapCenter); // panoId와 중심좌표를 통해 로드뷰 실행
+        });
+
+        var mapWalker = null;
+
+        // 로드뷰의 초기화 되었을때 map walker를 생성한다.
+        kakao.maps.event.addListener(roadview, 'init', function () {
+
+            // map walker를 생성한다. 생성시 지도의 중심좌표를 넘긴다.
+            mapWalker = new MapWalker(mapCenter);
+            mapWalker.setMap(map); // map walker를 지도에 설정한다.
+
+            // 로드뷰가 초기화 된 후, 추가 이벤트를 등록한다.
+            // 로드뷰를 상,하,좌,우,줌인,줌아웃을 할 경우 발생한다.
+            // 로드뷰를 조작할때 발생하는 값을 받아 map walker의 상태를 변경해 준다.
+            kakao.maps.event.addListener(roadview, 'viewpoint_changed', function () {
+
+                // 이벤트가 발생할 때마다 로드뷰의 viewpoint값을 읽어, map walker에 반영
+                var viewpoint = roadview.getViewpoint();
+                mapWalker.setAngle(viewpoint.pan);
+
+            });
+
+            // 로드뷰내의 화살표나 점프를 하였을 경우 발생한다.
+            // position값이 바뀔 때마다 map walker의 상태를 변경해 준다.
+            kakao.maps.event.addListener(roadview, 'position_changed', function () {
+
+                // 이벤트가 발생할 때마다 로드뷰의 position값을 읽어, map walker에 반영
+                var position = roadview.getPosition();
+                mapWalker.setPosition(position);
+                map.setCenter(position);
+
+            });
+        });
+
     </script>
-</div>
+{#</div>#}
 
 <div class="right">
     <div class="card" style="width: 100%;height: 100%">
@@ -289,43 +565,42 @@
             <p class="card-text">{{ scgym.gphone }}</p>
             <a href="{{ scgym.gurl }}" class="btn btn-primary" style="align-self: flex-end">바로가기</a>
         </div>
-=======
->>>>>>> fc02e6071c3272ee444208bdc340c273b49e3ec0
     </div>
+</div>
 
-    <div class="review">
-      <!--평가-->
-      <div class="postbtn">
+<div class="review">
+    <!--평가-->
+    <div class="postbtn">
         <button onclick="open_post()">평가 남기기</button>
-      </div>
-      <!--인풋박스-->
-      <div id="posting-box" class="posting-box">
+    </div>
+    <!--인풋박스-->
+    <div id="posting-box" class="posting-box">
         <div class="form-group">
           <textarea
-            class="form-control"
-            id="comment"
-            rows="6"
-            placeholder="{{ scgym.gymn }}에 대한 나의 평가를 알려주세요!"
+                  class="form-control"
+                  id="comment"
+                  rows="3"
+                  placeholder="{{ scgym.gymn }}에 대한 나의 평가를 알려주세요!"
           ></textarea>
         </div>
         <div class="savebtn">
-          <button onclick="close_post()">닫기</button>
-          <button onclick="posting()">등록</button>
+            <button onclick="close_post()">닫기</button>
+            <button onclick="posting()">등록</button>
         </div>
-      </div>
     </div>
+</div>
 
-    <div class="showtable">
-      <table id="placetable" class="table">
+<div class="showtable">
+    <table id="placetable" class="table">
         <thead class="th1">
-          <tr>
+        <tr>
             <td class="rev">평가</td>
             <td class="name">닉네임</td>
-          </tr>
+        </tr>
         </thead>
         <tbody id="reviewitems"></tbody>
-      </table>
-      <p id="explain_noreview" style="text-align: center; font-size: 9px"></p>
-    </div>
-  </body>
+    </table>
+    <p id="explain_noreview" style="text-align: center; font-size: 12px"></p>
+</div>
+</body>
 </html>
