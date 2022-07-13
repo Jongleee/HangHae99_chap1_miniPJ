@@ -151,6 +151,30 @@ def register_nick_check():
 
 
 
+# 데이터 입력용
+# import requests
+#
+# searching = '송파 헬스장'
+# url = 'https://dapi.kakao.com/v2/local/search/keyword.json?query={}'.format(searching)
+# headers = {
+#     "Authorization": "KakaoAK 264e01f5ee4957795f4b1518a3c2e783"
+# }
+# places = requests.get(url, headers = headers).json()['documents']
+#
+# for i in range(10):
+#     doc={
+#         'gymn':places[i]['place_name'],
+#         'gyma':places[i]['address_name'],
+#         'gcate':places[i]['category_name'],
+#         'gphone':places[i]['phone'],
+#         'gurl':places[i]['place_url'],
+#         'gra':places[i]['road_address_name'],
+#         'gx':places[i]['x'],
+#         'gy':places[i]['y']
+#     }
+#     db.scgym.insert_one(doc)
+
+
 
 
 @app.route('/detail/<keyword>/')
@@ -160,10 +184,14 @@ def detail(keyword):
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
         user_info = db.users.find_one({"id": payload['id']}, {"_id": False})
         nick = user_info["nick"]
+        scgym = db.scgym.find_one({"gymn": keyword}, {"_id": False})
+        return render_template('detail.html', nickname=nick, gym=keyword, scgym=scgym)
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return redirect(url_for("home"))
         # gymname= db.gymname.find_one({"title": keyword}, {"_id": False})
         # 세부사항1 = db.세부사항1.find_one({"title": keyword}, {"_id": False})
         # 세부사항2= db.세부사항2.find_one({"target": keyword}, {"_id": False})
-        return render_template('detail.html', nickname=nick, gym=keyword)
+
 
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for("home"))
