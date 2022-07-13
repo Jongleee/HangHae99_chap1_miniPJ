@@ -239,7 +239,16 @@
     </header>
     <div class="left">이미지가 들어갈 곳입니다.</div>
 
-    <div class="right">상세 정보가 들어갈 곳입니다.</div>
+    <div class="right">
+        <div class="card">
+            <h5 class="card-header">{{ scgym.gymn }}</h5>
+            <div class="card-body">
+                <h5 class="card-title">{{ scgym.gyma }}</h5>
+                <p class="card-text">{{ scgym.gphone }}</p>
+                <a href="{{ scgym.gurl }}" class="btn btn-primary">바로가기</a>
+            </div>
+        </div>
+    </div>
 
     <div class="review">
       <!--평가-->
@@ -253,7 +262,7 @@
             class="form-control"
             id="comment"
             rows="6"
-            placeholder="{{ gym }}에 대한 나의 평가를 알려주세요!"
+            placeholder="{{ scgym.gymn }}에 대한 나의 평가를 알려주세요!"
           ></textarea>
         </div>
         <div class="savebtn">
