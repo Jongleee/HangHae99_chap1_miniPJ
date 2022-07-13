@@ -186,13 +186,6 @@
 <script>
     //지도위에 현재 로드뷰의 위치와, 각도를 표시하기 위한 map walker 아이콘 생성 클래스
     function MapWalker(position) {
-        // 새로고침 기능
-        window.onload = function () {
-            if (!window.location.hash) {
-                window.location = window.location + '#loaded';
-                window.location.reload();
-            }
-        }
         //커스텀 오버레이에 사용할 map walker 엘리먼트
         var content = document.createElement('div');
         var figure = document.createElement('div');
@@ -215,7 +208,16 @@
 
         this.walker = walker;
         this.content = content;
+
+        // 새로고침 기능
+        window.onload = function () {
+            if (!window.location.hash) {
+                window.location = window.location + '#loaded';
+                window.location.reload();
+            }
+        }
     }
+
 
     //로드뷰의 pan(좌우 각도)값에 따라 map walker의 백그라운드 이미지를 변경 시키는 함수
     //background로 사용할 sprite 이미지에 따라 계산 식은 달라 질 수 있음
