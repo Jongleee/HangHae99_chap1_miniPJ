@@ -2,153 +2,154 @@
 <html lang="en">
 <head>
 
-  <title>운동갈지도 - {{ scgym.gymn }}</title>
+    <title>운동갈지도 - {{ scgym.gymn }}</title>
 
-  <meta charset="UTF-8"/>
-  <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-  <!-- og 태그 -->
-  <meta property="og:title" content="운동갈지도"/>
-  <meta property="og:description" content="이거 보면 운동갈지도?"/>
-  <meta property="og:image" content="/static/image/og.png"/>
+    <!-- og 태그 -->
+    <meta property="og:title" content="운동갈지도"/>
+    <meta property="og:description" content="이거 보면 운동갈지도?"/>
+    <meta property="og:image" content="/static/image/og.png"/>
 
-  <!-- 파비콘 -->
-  <link
-          rel="icon"
-          type="image/png"
-          sizes="16x16"
-          href="/static/images/favicon.png"
-  />
-  <!-- 부트스트랩 cdn -->
-  <link
-          href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
-          rel="stylesheet"
-          integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
-          crossorigin="anonymous"
-  />
-  <link
-          rel="stylesheet"
-          href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
-          crossorigin="anonymous"
-  />
-  <!-- 제이쿼리 cdn -->
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <!-- 구글폰트 -->
-  <link rel="preconnect" href="https://fonts.googleapis.com"/>
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-  <link
-          href="https://fonts.googleapis.com/css2?family=Dongle&family=Gothic+A1&family=Nanum+Gothic:wght@400;700&display=swap"
-          rel="stylesheet"
-  />
-  <link rel="stylesheet" href="/static/css/navbar.css"/>
-  <link rel="stylesheet" href="/static/css/detail.css">
+    <!-- 파비콘 -->
+    <link
+            rel="icon"
+            type="image/png"
+            sizes="16x16"
+            href="/static/images/favicon.png"
+    />
+    <!-- 부트스트랩 cdn -->
+    <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+            crossorigin="anonymous"
+    />
+    <link
+            rel="stylesheet"
+            href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+            integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+            crossorigin="anonymous"
+    />
+    <!-- 제이쿼리 cdn -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- 구글폰트 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+    <link
+            href="https://fonts.googleapis.com/css2?family=Dongle&family=Gothic+A1&family=Nanum+Gothic:wght@400;700&display=swap"
+            rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/static/css/navbar.css"/>
+    <link rel="stylesheet" href="/static/css/detail.css">
 
-  <!-- 쿠키 삭제용 쿼리 -->
+    <!-- 쿠키 삭제용 쿼리 -->
 
-  <script src=" https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+    <script src=" https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
 
-  <script>
-      $(document).ready(function () {
-          close_post();
-      });
+    <script>
+        $(document).ready(function () {
+            close_post();
 
-      function sign_out() {
-          $.removeCookie('mytoken', {path: '/'});
-          alert('로그아웃했습니다.');
-          window.location.href = '/login';
-      }
+            show_review();
+        });
 
-      // {# 리뷰 POST 기능: 전달 데이터 => 코멘트, 닉네임, 메뉴 #}
+        function sign_out() {
+            $.removeCookie('mytoken', {path: '/'});
+            alert('로그아웃했습니다.');
+            window.location.href = '/login';
+        }
 
-      function posting() {
-          let comment = $('#comment').val();
-          $.ajax({
-              type: 'POST',
-              url: `/detail/{{ gym }}/review`,
-              data: {
-                  gym_give: '{{ gym }}',
-                  nick_give: '{{ nickname }}',
-                  comment_give: comment,
-              },
-              success: function (response) {
-                  $('#explain_noreview').empty();
-                  show_review();
-              },
-          });
-      }
+        // {# 리뷰 POST 기능: 전달 데이터 => 코멘트, 닉네임, 메뉴 #}
 
-      function show_review() {
-          $('#reviewitems').empty();
-          $.ajax({
-              type: 'GET',
-              url: `/detail/{{ gym }}/review`,
-              data: {},
-              success: function (response) {
-                  if (response['result'] === 'empty') {
-                      let temp_html = `아직 게시된 리뷰가 없어요! 당신의 {{ gym }} 경험을 알려주세요!`;
-                      $('#explain_noreview').text(temp_html);
-                  } else if (response['result'] === 'success') {
-                      let rows = response['review_list'];
-                      for (let i = 0; i < rows.length; i++) {
-                          let comment = rows[i]['comment_receive'];
-                          let nick_receive = rows[i]['nick_receive'];
-                          let temp_html = `<tr>
+        function posting() {
+            let comment = $('#comment').val();
+            $.ajax({
+                type: 'POST',
+                url: `/detail/{{ gym }}/review`,
+                data: {
+                    gym_give: '{{ gym }}',
+                    nick_give: '{{ nickname }}',
+                    comment_give: comment,
+                },
+                success: function (response) {
+                    $('#explain_noreview').empty();
+                    show_review();
+                },
+            });
+        }
+
+        function show_review() {
+            $('#reviewitems').empty();
+            $.ajax({
+                type: 'GET',
+                url: `/detail/{{ gym }}/review`,
+                data: {},
+                success: function (response) {
+                    if (response['result'] === 'empty') {
+                        let temp_html = `아직 게시된 리뷰가 없어요! 당신의 {{ gym }} 경험을 알려주세요!`;
+                        $('#explain_noreview').text(temp_html);
+                    } else if (response['result'] === 'success') {
+                        let rows = response['review_list'];
+                        for (let i = 0; i < rows.length; i++) {
+                            let comment = rows[i]['comment_receive'];
+                            let nick_receive = rows[i]['nick_receive'];
+                            let temp_html = `<tr>
                                 <td>${comment}</td>
                                 <td>${nick_receive}</td>                            </tr>`;
-                          $('#reviewitems').append(temp_html);
-                      }
-                  }
-              },
-          });
-          close_post();
-      }
+                            $('#reviewitems').append(temp_html);
+                        }
+                    }
+                },
+            });
+            close_post();
+        }
 
-      function close_post() {
-          $('#posting-box').slideUp();
-      }
+        function close_post() {
+            $('#posting-box').slideUp();
+        }
 
-      function open_post() {
-          $('#posting-box').slideDown();
-      }
+        function open_post() {
+            $('#posting-box').slideDown();
+        }
 
-      show_review();
-  </script>
+    </script>
 </head>
 <body>
 <!-- 내비게이션 바 -->
 <header>
-  <nav>
-    <div class="nav-container">
-      <a href="/" class="logo">
-        <img
-                src="/static/images/mainImg.png"
-                alt="logo"
-                width="30"
-                height="25"
-        />
-        <span class="logo-span">운동갈지도</span>
-      </a>
-      <div class="logoutBtn">
-        <button
-                class="level-item button is-sparta is-outlined"
-                onclick="sign_out()"
-        >
-          Logout
-        </button>
-      </div>
-    </div>
-  </nav>
+    <nav>
+        <div class="nav-container">
+            <a href="/" class="logo">
+                <img
+                        src="/static/images/mainImg.png"
+                        alt="logo"
+                        width="30"
+                        height="25"
+                />
+                <span class="logo-span">운동갈지도</span>
+            </a>
+            <div class="logoutBtn">
+                <button
+                        class="level-item button is-sparta is-outlined"
+                        onclick="sign_out()"
+                >
+                    Logout
+                </button>
+            </div>
+        </div>
+    </nav>
 </header>
 
 <div class="map_wrap">
-  <div id="mapWrapper" style="width:50%;height:400px;float:left">
-    <div id="map" style="width:100%;height:100%"></div> <!-- 지도를 표시할 div 입니다 -->
-  </div>
-  <div id="rvWrapper" style="width:50%;height:400px;float:left">
-    <div id="roadview" style="width:100%;height:100%"></div> <!-- 로드뷰를 표시할 div 입니다 -->
-  </div>
+    <div id="mapWrapper" style="width:50%;height:400px;float:left">
+        <div id="map" style="width:100%;height:100%"></div> <!-- 지도를 표시할 div 입니다 -->
+    </div>
+    <div id="rvWrapper" style="width:50%;height:400px;float:left">
+        <div id="roadview" style="width:100%;height:100%"></div> <!-- 로드뷰를 표시할 div 입니다 -->
+    </div>
 </div>
 {#<div class="left">#}
 <!-- 기존 지도 -->
@@ -186,13 +187,6 @@
 <script>
     //지도위에 현재 로드뷰의 위치와, 각도를 표시하기 위한 map walker 아이콘 생성 클래스
     function MapWalker(position) {
-        // 새로고침 기능
-        window.onload = function () {
-            if (!window.location.hash) {
-                window.location = window.location + '#loaded';
-                window.location.reload();
-            }
-        }
         //커스텀 오버레이에 사용할 map walker 엘리먼트
         var content = document.createElement('div');
         var figure = document.createElement('div');
@@ -215,7 +209,16 @@
 
         this.walker = walker;
         this.content = content;
+
+        // 새로고침 기능
+        window.onload = function () {
+            if (!window.location.hash) {
+                window.location = window.location + '#loaded';
+                window.location.reload();
+            }
+        }
     }
+
 
     //로드뷰의 pan(좌우 각도)값에 따라 map walker의 백그라운드 이미지를 변경 시키는 함수
     //background로 사용할 sprite 이미지에 따라 계산 식은 달라 질 수 있음
@@ -305,49 +308,49 @@
 {#</div>#}
 
 <div class="right">
-  <div class="card" style="width: 100%;height: 100%">
-    <h5 class="card-header">{{ scgym.gcate }}</h5>
-    <div class="card-body">
-      <h5 class="card-title">{{ scgym.gyma }}</h5>
-      <p class="card-text">{{ scgym.gphone }}</p>
-      <a href="{{ scgym.gurl }}" class="btn btn-primary" style="align-self: flex-end">바로가기</a>
+    <div class="card" style="width: 100%;height: 100%">
+        <h5 class="card-header">{{ scgym.gcate }}</h5>
+        <div class="card-body">
+            <h5 class="card-title">{{ scgym.gyma }}</h5>
+            <p class="card-text">{{ scgym.gphone }}</p>
+            <a href="{{ scgym.gurl }}" class="btn btn-primary" style="align-self: flex-end">바로가기</a>
+        </div>
     </div>
-  </div>
 </div>
 
 <div class="review">
-  <!--평가-->
-  <div class="postbtn">
-    <button onclick="open_post()">평가 남기기</button>
-  </div>
-  <!--인풋박스-->
-  <div id="posting-box" class="posting-box">
-    <div class="form-group">
+    <!--평가-->
+    <div class="postbtn">
+        <button onclick="open_post()">평가 남기기</button>
+    </div>
+    <!--인풋박스-->
+    <div id="posting-box" class="posting-box">
+        <div class="form-group">
           <textarea
                   class="form-control"
                   id="comment"
                   rows="3"
                   placeholder="{{ scgym.gymn }}에 대한 나의 평가를 알려주세요!"
           ></textarea>
+        </div>
+        <div class="savebtn">
+            <button onclick="close_post()">닫기</button>
+            <button onclick="posting()">등록</button>
+        </div>
     </div>
-    <div class="savebtn">
-      <button onclick="close_post()">닫기</button>
-      <button onclick="posting()">등록</button>
-    </div>
-  </div>
 </div>
 
 <div class="showtable">
-  <table id="placetable" class="table">
-    <thead class="th1">
-    <tr>
-      <td class="rev">평가</td>
-      <td class="name">닉네임</td>
-    </tr>
-    </thead>
-    <tbody id="reviewitems"></tbody>
-  </table>
-  <p id="explain_noreview"></p>
+    <table id="placetable" class="table">
+        <thead class="th1">
+        <tr>
+            <td class="rev">평가</td>
+            <td class="name">닉네임</td>
+        </tr>
+        </thead>
+        <tbody id="reviewitems"></tbody>
+    </table>
+    <p id="explain_noreview"></p>
 </div>
 </body>
 </html>
